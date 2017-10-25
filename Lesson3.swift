@@ -9,21 +9,73 @@ protocol Manager{
 	func terroristAttack()
 }
 
+protocol Plumber{
+	func eliminateLeak()
+} 
+
+protocol Cleaner{
+	func clean()
+}
+
+protocol Translator{
+	func translate()	
+}
+
+class CompanyPlumber: Plumber{
+	func eliminateLeak(){
+		print("Plumber has eliminated a leak")
+	}
+}
+
+class CompanyCleaner: Cleaner{
+	func clean(){
+		print("Cleaner has cleaned")
+	}
+}
+
+class CompanyTranslator: Translator{
+	func translate(){
+		print("Translator has translated")
+	}
+}
+
 class OfficeManager: Manager{
+	var plumber: Plumber?
+	var cleaner: Cleaner?
+	var translator: Translator?
+	
+	init(plumber: Plumber?, cleaner: Cleaner?, translator: Translator?){
+		self.plumber = plumber
+		self.translator = translator
+		self.cleaner = cleaner
+	}
+	
 	func payBill(){
-		// to do smth
+		// can do self
 	}
 	func eliminateLeak(){
-		// to do smth
+		guard let plumber = plumber else{
+			print("Can not resolve a proplem, cause Manager hasn't a Plumber")
+			return
+		}
+		plumber.eliminateLeak()
 	}
 	func cleanOffice(){
-		// to do smth
+		guard let cleaner = cleaner else{
+			print("Can not resolve a proplem, cause Manager hasn't a Cleaner")
+			return
+		}
+		cleaner.clean()
 	}
 	func buyCookies(){
-		// to do smth
+		// can do self
 	}
 	func readForeignLetters(){
-		// to do smth
+		guard let translator = translator else{
+			print("Can not resolve a proplem, cause Manager hasn't a Translator")
+			return
+		}
+		translator.translate()
 	}
 	func terroristAttack(){
 		// to do smth
@@ -33,7 +85,7 @@ class OfficeManager: Manager{
 class Office{
 	var manager: Manager?
 	
-	init(manager: Manager){
+	init(manager: Manager?){
 		self.manager = manager
 	}
 	
@@ -68,13 +120,15 @@ class Office{
 	}
 	
 	private func checkSolvableProblem(){
-		guard manager==nil ? false : true else{
+		guard manager == nil ? false : true else{
 			print("Can not resolve a proplem, cause Office hasn't a Manager")
 			return
 		}
 	}
 } 
 
-var manager = OfficeManager()
+var manager = OfficeManager(plumber: CompanyPlumber(), cleaner: nil, translator: CompanyTranslator())
 var office = Office(manager: manager)
 office.eliminateLeak()
+office.cleanOffice()
+office.readForeignLetters()
