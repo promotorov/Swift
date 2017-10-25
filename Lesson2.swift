@@ -70,16 +70,16 @@ class SequenceHandler{
 }
 
 func printSeq(sequence: [Int]?){
-	guard (sequence?.count)! > 0 else{
-		print("array is Empty")
-		return
-	}
-	guard sequence != nil else{
+	guard let sequence = sequence else{
 		print("array is Null")
 		return
 	} 
-	let joinedString = sequence?.map{String($0)}.joined(separator: ", ")
-	print(joinedString!)
+	guard sequence.count > 0 else{
+		print("array is Empty")
+		return
+	}
+	let joinedString = sequence.map{String($0)}.joined(separator: ", ")
+	print(joinedString)
 }
 
 func createEvenInvertedSeq(sequence: [Int]?) -> [Int]?{
