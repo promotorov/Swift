@@ -27,13 +27,13 @@ class FibonacciSequance: BaseSequence{
         var seq: [Int] = []
         for index in 0..<countElements{
             var number: Int
-            if index==0 || index==1{
-                number=1
-            }
-            else{
+            if index >= 2{
                 let last = seq[index-1]
                 let moreLast = seq[index-2]
                 number = last + moreLast
+            }
+            else{
+                number = 1
             }
             seq.append(number)
         }
@@ -43,9 +43,7 @@ class FibonacciSequance: BaseSequence{
 
 class EvenSequance: BaseSequence{
     override func createSequance(countElements: Int)  -> [Int]?{
-        let range = 0..<countElements
-        sequence=range.map{$0 * 2}
-        return sequence
+        return (0..<countElements).map{$0*2}
     }
 }
 
@@ -56,13 +54,21 @@ class SequenceHandler{
         self.sequance=sequance
     }
     func printSequence(printType: PrintType){
+		guard let sequence = sequance?.sequence else{
+			print("array is Null")
+			return
+		} 
+		guard sequence.count > 0 else{
+			print("array is Empty")
+			return
+		}
         switch printType{
         case .simple:
-            for number in (sequance?.sequence)!{
+            for number in sequence{
                 print(number)
             }
         case .hard:
-            for (index, number) in (sequance?.sequence?.enumerated())!{
+            for (index, number) in sequence.enumerated(){
                 print("\(index): \(number)")
             }
         }
@@ -94,3 +100,4 @@ var fibSequence = createEvenInvertedSeq(sequence: sequenceHandlerFinob.sequance?
 var evenSequence = createEvenInvertedSeq(sequence: sequenceHandlerEven.sequance?.sequence)
 printSeq(sequence: fibSequence)
 printSeq(sequence: evenSequence)
+
