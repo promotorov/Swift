@@ -6,7 +6,7 @@ protocol Manager{
 	func cleanOffice()
 	func buyCookies()
 	func readForeignLetters()
-	func terrorostAttack()
+	func terroristAttack()
 }
 
 class OfficeManager: Manager{
@@ -25,7 +25,7 @@ class OfficeManager: Manager{
 	func readForeignLetters(){
 		// to do smth
 	}
-	func terrorostAttack(){
+	func terroristAttack(){
 		// to do smth
 	}
 }
@@ -38,27 +38,43 @@ class Office{
 	}
 	
 	func payBill(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.payBill() 
 	}
 	
 	func eliminateLeak(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.eliminateLeak()
 	}
 	
 	func cleanOffice(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.cleanOffice()
 	}
 	
 	func buyCookies(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.buyCookies()
 	}
 	
 	func readForeignLetters(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.readForeignLetters()
 	}
 	
 	func terrorostAttack(){
-		// to do smth
+		checkSolvableProblem()
+		manager?.terroristAttack()
 	}
-
+	
+	private func checkSolvableProblem(){
+		guard manager==nil ? false : true else{
+			print("Can not resolve a proplem, cause Office hasn't a Manager")
+			return
+		}
+	}
 } 
+
+var manager = OfficeManager()
+var office = Office(manager: manager)
+office.eliminateLeak()
