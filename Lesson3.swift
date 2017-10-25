@@ -15,35 +15,35 @@ protocol Manager{
 }
 
 protocol Plumber{
-	func eliminateLeak(office: Office)
+	func eliminateLeak() -> Bool
 } 
 
 protocol Cleaner{
-	func clean(office: Office)
+	func clean() -> Bool
 }
 
 protocol Translator{
-	func translate(office: Office)	
+	func translate() -> Bool	
 }
 
 class CompanyPlumber: Plumber{
-	func eliminateLeak(office: Office){
-		office.isLeak = false
+	func eliminateLeak() -> Bool{
 		print("Plumber has eliminated a leak")
+		return true
 	}
 }
 
 class CompanyCleaner: Cleaner{
-	func clean(office: Office){
-		office.isDirty = false
+	func clean() -> Bool{
 		print("Cleaner has cleaned")
+		return true
 	}
 }
 
 class CompanyTranslator: Translator{
-	func translate(office: Office){
-		office.isForeignLetters = false
+	func translate() -> Bool{
 		print("Translator has translated")
+		return true
 	}
 }
 
@@ -76,7 +76,7 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Plumber")
 			return
 		}
-		plumber.eliminateLeak(office: office)
+		office.isLeak = plumber.eliminateLeak() ? false : true
 	}
 	func cleanOffice(office: Office){
 		guard office.isDirty else{
@@ -87,7 +87,7 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Cleaner")
 			return
 		}
-		cleaner.clean(office: office)
+		office.isDirty = cleaner.clean() ? false : true
 	}
 	func buyCookies(count: Int, office: Office){
 		let typeOfCookies: Int = TypeOfCookies.cheap.rawValue
@@ -109,7 +109,7 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Translator")
 			return
 		}
-		translator.translate(office: office)
+		office.isForeignLetters = translator.translate() ? false : true
 	}
 	func terroristAttack(){
 		print("Dont know what can i do")
