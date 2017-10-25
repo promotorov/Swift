@@ -1,10 +1,15 @@
 import Foundation
 
+enum TypeOfCookies: Int{
+	case cheap = 20
+	case expensive = 30
+}
+
 protocol Manager{
-	func payBill()
+	func payBill(amount: Int, office: Office)
 	func eliminateLeak()
 	func cleanOffice()
-	func buyCookies()
+	func buyCookies(count: Int, office: Office)
 	func readForeignLetters()
 	func terroristAttack()
 }
@@ -50,8 +55,14 @@ class OfficeManager: Manager{
 		self.cleaner = cleaner
 	}
 	
-	func payBill(){
-		// can do self
+	func payBill(amount: Int, office: Office){
+		guard office.money >= amount else{
+			print("Can not pay bill cause is not enough money")
+			return
+		}
+		office.money -= amount
+		office.bill -= amount
+		print("Sucsessfully paid the bill.")
 	}
 	func eliminateLeak(){
 		guard let plumber = plumber else{
@@ -67,8 +78,16 @@ class OfficeManager: Manager{
 		}
 		cleaner.clean()
 	}
-	func buyCookies(){
-		// can do self
+	func buyCookies(count: Int, office: Office){
+		let typeOfCookies: Int = TypeOfCookies.cheap.rawValue
+		let sum = count * typeOfCookies
+		guard office.money >= sum else{
+			print("Can not buy cookies cause is not enough money")
+			return
+		}
+		office.money -= sum
+		office.cookies += count
+		print("Sucsessfully bought the cookies.")
 	}
 	func readForeignLetters(){
 		guard let translator = translator else{
@@ -84,14 +103,17 @@ class OfficeManager: Manager{
 
 class Office{
 	var manager: Manager?
+	var money = 1000	
+	var cookies=0
+	var bill=200
 	
 	init(manager: Manager?){
 		self.manager = manager
 	}
 	
-	func payBill(){
+	func payBill(amount: Int){
 		checkSolvableProblem()
-		manager?.payBill() 
+		manager?.payBill(amount: amount, office: self) 
 	}
 	
 	func eliminateLeak(){
@@ -104,9 +126,9 @@ class Office{
 		manager?.cleanOffice()
 	}
 	
-	func buyCookies(){
+	func buyCookies(count: Int){
 		checkSolvableProblem()
-		manager?.buyCookies()
+		manager?.buyCookies(count: count, office: self)
 	}
 	
 	func readForeignLetters(){
@@ -132,3 +154,12 @@ var office = Office(manager: manager)
 office.eliminateLeak()
 office.cleanOffice()
 office.readForeignLetters()
+print(office.money)
+print(office.bill)
+office.payBill(amount: 100)
+print(office.money)
+print(office.bill)
+print(office.cookies)
+office.buyCookies(count: 20)
+print(office.money)
+print(office.cookies)
