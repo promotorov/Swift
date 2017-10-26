@@ -11,11 +11,11 @@ enum TypeOfLeaks{
 }
 
 protocol Manager{
-	func payBill(amount: Int, office: Office)
-	func eliminateLeak(office: Office)
-	func cleanOffice(office: Office)
-	func buyCookies(count: Int, office: Office)
-	func readForeignLetters(office: Office)
+	func payBill(amount: Int)
+	func eliminateLeak()
+	func cleanOffice()
+	func buyCookies(count: Int)
+	func readForeignLetters()
 	func terroristAttack()
 }
 
@@ -33,10 +33,13 @@ protocol Translator{
 
 class Leak{
 	var type: TypeOfLeaks
-	var status = true
+	var isActive = true
 	
 	init(type: TypeOfLeaks){
 		self.type = type
+	}	
+	func fixLeak(){
+		self.isActive = false
 	}
 }
 
@@ -49,7 +52,7 @@ class CompanyPlumber: Plumber{
 			case .changeTrumpet:
 				result += "changeTrumpet"
 		}
-		leak.status = false
+		leak.fixLeak()
 		print(result)
 	}
 }
@@ -70,14 +73,25 @@ class OfficeManager: Manager{
 	var plumber: Plumber?
 	var cleaner: Cleaner?
 	var translator: Translator?
+	var office: Office? {
+		didSet{
+			hasJob = (office != nil) ? true : false
+		}
+	}
+	private(set) var hasJob: Bool?
 	
-	init(plumber: Plumber?, cleaner: Cleaner?, translator: Translator?){
+	init(plumber: Plumber?, cleaner: Cleaner?, translator: Translator?, office: Office?){
 		self.plumber = plumber
 		self.translator = translator
 		self.cleaner = cleaner
+		self.office = office
+		hasJob = (office != nil) ? true : false
 	}
-	
-	func payBill(amount: Int, office: Office){
+	func payBill(amount: Int){
+		guard let office = office else{
+			messageNoJob()
+			return
+		}
 		guard office.money >= amount else{
 			print("Can not pay bill cause is not enough money")
 			return
@@ -86,7 +100,11 @@ class OfficeManager: Manager{
 		office.bill -= amount
 		print("Sucsessfully paid the bill.")
 	}
-	func eliminateLeak(office: Office){
+	func eliminateLeak(){
+		guard let office = office else{
+			messageNoJob()
+			return
+		}
 		let leaks = office.leaks
 		if  leaks.isEmpty{
 			print("There is no a leak")
@@ -96,10 +114,14 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Plumber")
 			return
 		}
-		leaks.map{plumber.eliminateLeak(leak: $0)}
-		office.leaks = leaks.filter{$0.status == true}
+		leaks.filter{$0.isActive==true}.map{plumber.eliminateLeak(leak: $0)}
+		office.leaks = leaks.filter{$0.isActive == true}
 	}
-	func cleanOffice(office: Office){
+	func cleanOffice(){
+		guard let office = office else{
+			messageNoJob()
+			return
+		}
 		guard office.isDirty else{
 			print("The office is clean")
 			return
@@ -108,8 +130,13 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Cleaner")
 			return
 		}
+		cleaner?.clean()
 	}
-	func buyCookies(count: Int, office: Office){
+	func buyCookies(count: Int){
+		guard let office = office else{
+			messageNoJob()
+			return
+		}
 		let typeOfCookies: Int = TypeOfCookies.cheap.rawValue
 		let sum = count * typeOfCookies
 		guard office.money >= sum else{
@@ -120,7 +147,11 @@ class OfficeManager: Manager{
 		office.cookies += count
 		print("Sucsessfully bought the cookies.")
 	}
-	func readForeignLetters(office: Office){
+	func readForeignLetters(){
+		guard let office = office else{
+			messageNoJob()
+			return
+		}
 		guard office.isForeignLetters else{
 			print("There is no foreign letters")
 			return
@@ -129,9 +160,13 @@ class OfficeManager: Manager{
 			print("Can not resolve a proplem, cause Manager hasn't a Translator")
 			return
 		}
+		translator?.translate()
 	}
 	func terroristAttack(){
 		print("Dont know what can i do")
+	}
+	private func messageNoJob(){
+		print("Manager hasn't a job")
 	}
 }
 
@@ -143,69 +178,16 @@ class Office{
 	var leaks: [Leak] = []
 	var isDirty = true
 	var isForeignLetters = true
-	
-	
-	init(manager: Manager?){
-		self.manager = manager
-	}
-	
-	func payBill(amount: Int){
-		checkSolvableProblem()
-		manager?.payBill(amount: amount, office: self) 
-	}
-	
-	func eliminateLeak(){
-		checkSolvableProblem()
-		manager?.eliminateLeak(office: self)
-	}
-	
-	func cleanOffice(){
-		checkSolvableProblem()
-		manager?.cleanOffice(office: self)
-	}
-	
-	func buyCookies(count: Int){
-		checkSolvableProblem()
-		manager?.buyCookies(count: count, office: self)
-	}
-	
-	func readForeignLetters(){
-		checkSolvableProblem()
-		manager?.readForeignLetters(office: self)
-	}
-	
-	func terrorostAttack(){
-		checkSolvableProblem()
-		manager?.terroristAttack()
-	}
-	
-	private func checkSolvableProblem(){
-		guard manager == nil ? false : true else{
-			print("Can not resolve a proplem, cause Office hasn't a Manager")
-			return
-		}
-	}
 } 
-var manager = OfficeManager(plumber: CompanyPlumber(), cleaner: nil, translator: CompanyTranslator())
-var office = Office(manager: manager)
+var office = Office()
+var manager = OfficeManager(plumber: CompanyPlumber(), cleaner: CompanyCleaner(), translator: CompanyTranslator(), office: office)
 var leak1=Leak(type: TypeOfLeaks.changeGasket)
 var leak2=Leak(type: TypeOfLeaks.changeTrumpet)
 office.leaks.append(leak1)
 office.leaks.append(leak2)
-print(office.isDirty)
-print(office.isForeignLetters)
-office.eliminateLeak()
-office.cleanOffice()
-office.readForeignLetters()
-print(office.money)
-print(office.bill)
-office.payBill(amount: 100)
-print(office.money)
-print(office.bill)
-print(office.cookies)
-office.buyCookies(count: 20)
-print(office.money)
-print(office.cookies)
-print(office.isDirty)
-print(office.isForeignLetters)
-office.eliminateLeak()
+manager.eliminateLeak()
+manager.readForeignLetters()
+manager.cleanOffice()
+manager.buyCookies(count: 20)
+manager.terroristAttack()
+manager.payBill(amount: 100)
