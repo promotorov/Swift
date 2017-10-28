@@ -25,42 +25,22 @@ class MainViewController: UIViewController{
         mainView.buttonDiv.addTarget(self, action: #selector(handleButtonDiv), for: .touchUpInside)
     }
     @objc func handleButtonAdd(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        changeViewsAfterCalculate(operation: "+", firstOperand: firstOperand, secondOperand: secondOperand)
+        checkNumbers(textFieldFirst: mainView.textFieldFirstNumber, textFieldSecond: mainView.textFieldSecondNumber, operations: Operations.add)
     }
     
     @objc func handleButtonSub(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        changeViewsAfterCalculate(operation: "-", firstOperand: firstOperand, secondOperand: secondOperand)
+        checkNumbers(textFieldFirst: mainView.textFieldFirstNumber, textFieldSecond: mainView.textFieldSecondNumber, operations: Operations.sub)
     }
     
     @objc func handleButtonMul(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = notNumberMessage
-            return
-        }
-        changeViewsAfterCalculate(operation: "*", firstOperand: firstOperand, secondOperand: secondOperand)
+        checkNumbers(textFieldFirst: mainView.textFieldFirstNumber, textFieldSecond: mainView.textFieldSecondNumber, operations: Operations.mul)
     }
     
     @objc func handleButtonDiv(){
+        checkNumbers(textFieldFirst: mainView.textFieldFirstNumber, textFieldSecond: mainView.textFieldSecondNumber, operations: Operations.div)
+    }
+    
+    private func checkNumbers(textFieldFirst: UITextField, textFieldSecond: UITextField, operations: Operations){
         guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
             mainView.labelResult.text = notNumberMessage
             return
@@ -69,26 +49,51 @@ class MainViewController: UIViewController{
             mainView.labelResult.text = notNumberMessage
             return
         }
-        changeViewsAfterCalculate(operation: "/", firstOperand: firstOperand, secondOperand: secondOperand)
+        changeViewsAfterCalculate(operation: operations, firstOperand: firstOperand, secondOperand: secondOperand)
     }
-    private func changeViewsAfterCalculate(operation: String, firstOperand: Double, secondOperand: Double){
-        var result: Double = 0
+    
+    private func changeViewsAfterCalculate(operation: Operations, firstOperand: Double, secondOperand: Double){
+        var result: Double
+        var action: String
         switch operation {
-        case "+":
+        case .add:
             result = firstOperand + secondOperand
-        case "-":
+            action = "+"
+        case .sub:
             result = firstOperand - secondOperand
-        case "/":
+            action = "-"
+        case .div:
             result = firstOperand / secondOperand
-        case "*":
+            action = "/"
+        case .mul:
             result = firstOperand * secondOperand
+            action = "*"
         default:
             mainView.labelResult.text = wrongOperationMessage
             return
         }
-        result = round(result * 1000) / 1000
-        mainView.labelResult.text = "\(firstOperand) \(operation) \(secondOperand) = \(result)"
+        result = roundNumber(number: result, accuracy: 3)
+        mainView.labelResult.text = "\(firstOperand) \(action) \(secondOperand) = \(result)"
         mainView.textFieldSecondNumber.text = ""
         mainView.textFieldFirstNumber.text = "\(result)"
     }
+}
+
+extension MainViewController{
+    /*
+     Округление числа
+     number - число
+     accuracy - число знаков после запятой
+     */
+    func roundNumber(number: Double, accuracy: Double) -> Double{
+        let num = pow(10, accuracy)
+        return round(number * num) / num
+    }
+}
+
+enum Operations{
+    case sub
+    case add
+    case div
+    case mul
 }

@@ -2,20 +2,61 @@ import Foundation
 import UIKit
 
 class MainView: UIView{
-    var labelResult: UILabel = UILabel()
-    var textFieldFirstNumber: UITextField = UITextField()
-    var textFieldSecondNumber: UITextField = UITextField()
-    var buttonAdd: UIButton = UIButton()
-    var buttonSub: UIButton = UIButton()
-    var buttonDiv: UIButton = UIButton()
-    var buttonMul: UIButton = UIButton()
+    var labelResult: UILabel = {
+        var label = UILabel()
+        label.backgroundColor = UIColor.purple
+        label.textColor = UIColor.white
+        return label
+    }()
+    var textFieldFirstNumber: UITextField = {
+        var textField = UITextField()
+        setTextFieldProperties(textField: textField)
+        textField.textColor = UIColor.black
+        
+        return textField
+    }()
+    var textFieldSecondNumber: UITextField = {
+        var textField = UITextField()
+        setTextFieldProperties(textField: textField)
+        textField.textColor = UIColor.blue
+        return textField
+    }()
+    var buttonAdd: UIButton = {
+        var button = UIButton()
+        button.setTitle("+", for: .normal)
+        button.backgroundColor = UIColor.red
+        return button
+    }()
+ 
+    var buttonSub: UIButton = {
+        var button = UIButton()
+        button.setTitle("-", for: .normal)
+        button.backgroundColor = UIColor.brown
+        return button
+    }()
     
+    var buttonDiv: UIButton = {
+        var button = UIButton()
+        button.setTitle("/", for: .normal)
+        button.backgroundColor = UIColor.black
+        return button
+    }()
+    
+    var buttonMul: UIButton = {
+        var button = UIButton()
+        button.setTitle("*", for: .normal)
+        button.backgroundColor = UIColor.blue
+        return button
+    }()
     override init(frame: CGRect){
         super.init(frame: frame)
-        
-        initTextFields()
-        initButtons()
-        initLabels()
+        addSubview(labelResult)
+        addSubview(textFieldSecondNumber)
+        addSubview(textFieldFirstNumber)
+        addSubview(buttonAdd)
+        addSubview(buttonDiv)
+        addSubview(buttonSub)
+        addSubview(buttonMul)
     }
     
     override var frame: CGRect{
@@ -35,43 +76,9 @@ class MainView: UIView{
         fatalError("init has not been implemented")
     }
     
-    private func initTextFields(){
-        textFieldFirstNumber.borderStyle = UITextBorderStyle.roundedRect
-        textFieldFirstNumber.textColor = UIColor.black
-        textFieldFirstNumber.textAlignment = NSTextAlignment.center
-        
-        textFieldSecondNumber.borderStyle = UITextBorderStyle.roundedRect
-        textFieldSecondNumber.textAlignment = NSTextAlignment.center
-        textFieldSecondNumber.textColor = UIColor.blue
-        
-        addSubview(textFieldFirstNumber)
-        addSubview(textFieldSecondNumber)
-    }
-    
-    private func initButtons(){
-        buttonAdd.setTitle("+", for: .normal)
-        buttonAdd.backgroundColor = UIColor.red
-        
-        buttonSub.setTitle("-", for: .normal)
-        buttonSub.backgroundColor = UIColor.blue
-        
-        buttonDiv.setTitle("/", for: .normal)
-        buttonDiv.backgroundColor = UIColor.black
-        
-        buttonMul.setTitle("*", for: .normal)
-        buttonDiv.backgroundColor = UIColor.brown
-        
-        addSubview(buttonAdd)
-        addSubview(buttonDiv)
-        addSubview(buttonMul)
-        addSubview(buttonSub)
-    }
-    
-    private func initLabels(){
-        labelResult.backgroundColor = UIColor.purple
-        labelResult.textColor = UIColor.white
-        
-        addSubview(labelResult)
+    private static func setTextFieldProperties(textField: UITextField){
+        textField.borderStyle = UITextBorderStyle.roundedRect
+        textField.textAlignment = NSTextAlignment.center
     }
 }
 
