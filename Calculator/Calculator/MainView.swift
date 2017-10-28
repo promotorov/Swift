@@ -69,10 +69,23 @@ class MainViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.green
-        mainView.labelResult.text = "label text"
+        mainView.labelResult.text = "nothing yet"
         mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAdd), for: .touchUpInside)
     }
     @objc func handleButtonAdd(){
-        mainView.labelResult.text = mainView.textFieldSecondNumber.text
+        guard let firstOperand = Int(mainView.textFieldFirstNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        guard let secondOperand = Int(mainView.textFieldSecondNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        let result = firstOperand + secondOperand
+        mainView.labelResult.text = "\(firstOperand) + \(secondOperand) = \(result)"
+        mainView.textFieldSecondNumber.text = ""
+        mainView.textFieldFirstNumber.text = "\(result)"
     }
+    
+    
 }
