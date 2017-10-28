@@ -12,29 +12,10 @@ class MainView: UIView{
     
     override init(frame: CGRect){
         super.init(frame: frame)
-        textFieldFirstNumber.borderStyle = UITextBorderStyle.roundedRect
-        textFieldSecondNumber.borderStyle = UITextBorderStyle.roundedRect
-        textFieldFirstNumber.textColor = UIColor.black
-        textFieldFirstNumber.textAlignment = NSTextAlignment.center
-        textFieldSecondNumber.textAlignment = NSTextAlignment.center
-        textFieldSecondNumber.textColor = UIColor.blue
-        buttonAdd.setTitle("+", for: .normal)
-        buttonSub.setTitle("-", for: .normal)
-        buttonDiv.setTitle("/", for: .normal)
-        buttonMul.setTitle("*", for: .normal)
-        buttonAdd.backgroundColor = UIColor.red
-        buttonSub.backgroundColor = UIColor.blue
-        buttonDiv.backgroundColor = UIColor.black
-        buttonMul.backgroundColor = UIColor.brown
-        labelResult.backgroundColor = UIColor.purple
-        labelResult.textColor = UIColor.white
-        addSubview(textFieldFirstNumber)
-        addSubview(textFieldSecondNumber)
-        addSubview(buttonAdd)
-        addSubview(buttonDiv)
-        addSubview(buttonMul)
-        addSubview(buttonSub)
-        addSubview(labelResult)
+        
+        initTextFields()
+        initButtons()
+        initLabels()
     }
     
     override var frame: CGRect{
@@ -53,93 +34,45 @@ class MainView: UIView{
     required init?(coder aDecoder: NSCoder) {
         fatalError("init has not been implemented")
     }
+    
+    private func initTextFields(){
+        textFieldFirstNumber.borderStyle = UITextBorderStyle.roundedRect
+        textFieldFirstNumber.textColor = UIColor.black
+        textFieldFirstNumber.textAlignment = NSTextAlignment.center
+        
+        textFieldSecondNumber.borderStyle = UITextBorderStyle.roundedRect
+        textFieldSecondNumber.textAlignment = NSTextAlignment.center
+        textFieldSecondNumber.textColor = UIColor.blue
+        
+        addSubview(textFieldFirstNumber)
+        addSubview(textFieldSecondNumber)
+    }
+    
+    private func initButtons(){
+        buttonAdd.setTitle("+", for: .normal)
+        buttonAdd.backgroundColor = UIColor.red
+        
+        buttonSub.setTitle("-", for: .normal)
+        buttonSub.backgroundColor = UIColor.blue
+        
+        buttonDiv.setTitle("/", for: .normal)
+        buttonDiv.backgroundColor = UIColor.black
+        
+        buttonMul.setTitle("*", for: .normal)
+        buttonDiv.backgroundColor = UIColor.brown
+        
+        addSubview(buttonAdd)
+        addSubview(buttonDiv)
+        addSubview(buttonMul)
+        addSubview(buttonSub)
+    }
+    
+    private func initLabels(){
+        labelResult.backgroundColor = UIColor.purple
+        labelResult.textColor = UIColor.white
+        
+        addSubview(labelResult)
+    }
 }
 
-class MainViewController: UIViewController{
-    
-    var mainView: MainView{
-        get{
-            return view as! MainView
-        }
-    }
-    
-    override func loadView() {
-        view = MainView()
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.green
-        mainView.labelResult.text = "nothing yet"
-        mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAdd), for: .touchUpInside)
-        mainView.buttonSub.addTarget(self, action: #selector(handleButtonSub), for: .touchUpInside)
-        mainView.buttonMul.addTarget(self, action: #selector(handleButtonMul), for: .touchUpInside)
-        mainView.buttonDiv.addTarget(self, action: #selector(handleButtonDiv), for: .touchUpInside)
-    }
-    @objc func handleButtonAdd(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        changeViewsAfterCalculate(operation: "+", firstOperand: firstOperand, secondOperand: secondOperand)
-    }
-    
-    @objc func handleButtonSub(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        changeViewsAfterCalculate(operation: "-", firstOperand: firstOperand, secondOperand: secondOperand)
-    }
-    
-    @objc func handleButtonMul(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        changeViewsAfterCalculate(operation: "*", firstOperand: firstOperand, secondOperand: secondOperand)
-    }
-    
-    @objc func handleButtonDiv(){
-        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
-            mainView.labelResult.text = "Value in textFields isn't a number"
-            return
-        }
-        changeViewsAfterCalculate(operation: "/", firstOperand: firstOperand, secondOperand: secondOperand)
-    }
-    private func changeViewsAfterCalculate(operation: String, firstOperand: Double, secondOperand: Double){
-        var result: Double = 0
-        switch operation {
-            case "+":
-                result = firstOperand + secondOperand
-            case "-":
-                result = firstOperand - secondOperand
-            case "/":
-                result = firstOperand / secondOperand
-            case "*":
-                result = firstOperand * secondOperand
-            default:
-                mainView.labelResult.text = "Operation is wrong"
-                return
-        }
-        result = round(result * 1000) / 1000
-        mainView.labelResult.text = "\(firstOperand) \(operation) \(secondOperand) = \(result)"
-        mainView.textFieldSecondNumber.text = ""
-        mainView.textFieldFirstNumber.text = "\(result)"
-    }
-}
+
