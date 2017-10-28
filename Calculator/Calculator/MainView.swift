@@ -45,7 +45,7 @@ class MainView: UIView{
             buttonAdd.frame = CGRect(x: 140, y: 150, width: 100, height: 30)
             buttonMul.frame = CGRect(x: 20, y: 190, width: 100, height: 30)
             buttonDiv.frame = CGRect(x: 140, y: 190, width: 100, height: 30)
-            labelResult.frame = CGRect(x: 20, y: 230, width: 250, height: 30)
+            labelResult.frame = CGRect(x: 20, y: 230, width: 290, height: 30)
     
         }
     }
@@ -71,21 +71,75 @@ class MainViewController: UIViewController{
         view.backgroundColor = UIColor.green
         mainView.labelResult.text = "nothing yet"
         mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAdd), for: .touchUpInside)
+        mainView.buttonSub.addTarget(self, action: #selector(handleButtonSub), for: .touchUpInside)
+        mainView.buttonMul.addTarget(self, action: #selector(handleButtonMul), for: .touchUpInside)
+        mainView.buttonDiv.addTarget(self, action: #selector(handleButtonDiv), for: .touchUpInside)
     }
     @objc func handleButtonAdd(){
-        guard let firstOperand = Int(mainView.textFieldFirstNumber.text!) else{
+        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
             mainView.labelResult.text = "Value in textFields isn't a number"
             return
         }
-        guard let secondOperand = Int(mainView.textFieldSecondNumber.text!) else{
+        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
             mainView.labelResult.text = "Value in textFields isn't a number"
             return
         }
-        let result = firstOperand + secondOperand
-        mainView.labelResult.text = "\(firstOperand) + \(secondOperand) = \(result)"
+        changeViewsAfterCalculate(operation: "+", firstOperand: firstOperand, secondOperand: secondOperand)
+    }
+    
+    @objc func handleButtonSub(){
+        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        changeViewsAfterCalculate(operation: "-", firstOperand: firstOperand, secondOperand: secondOperand)
+    }
+    
+    @objc func handleButtonMul(){
+        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        changeViewsAfterCalculate(operation: "*", firstOperand: firstOperand, secondOperand: secondOperand)
+    }
+    
+    @objc func handleButtonDiv(){
+        guard let firstOperand = Double(mainView.textFieldFirstNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        guard let secondOperand = Double(mainView.textFieldSecondNumber.text!) else{
+            mainView.labelResult.text = "Value in textFields isn't a number"
+            return
+        }
+        changeViewsAfterCalculate(operation: "/", firstOperand: firstOperand, secondOperand: secondOperand)
+    }
+    private func changeViewsAfterCalculate(operation: String, firstOperand: Double, secondOperand: Double){
+        var result: Double = 0
+        switch operation {
+            case "+":
+                result = firstOperand + secondOperand
+            case "-":
+                result = firstOperand - secondOperand
+            case "/":
+                result = firstOperand / secondOperand
+            case "*":
+                result = firstOperand * secondOperand
+            default:
+                mainView.labelResult.text = "Operation is wrong"
+                return
+        }
+        result = round(result * 1000) / 1000
+        mainView.labelResult.text = "\(firstOperand) \(operation) \(secondOperand) = \(result)"
         mainView.textFieldSecondNumber.text = ""
         mainView.textFieldFirstNumber.text = "\(result)"
     }
-    
-    
 }
