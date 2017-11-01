@@ -58,42 +58,27 @@ class MainViewController: UIViewController{
         switch operation {
         case .add:
             result = firstOperand + secondOperand
-            action = "+"
         case .sub:
             result = firstOperand - secondOperand
-            action = "-"
         case .div:
             result = firstOperand / secondOperand
-            action = "/"
         case .mul:
             result = firstOperand * secondOperand
-            action = "*"
         default:
             mainView.labelResult.text = wrongOperationMessage
             return
         }
-        result = roundNumber(number: result, accuracy: 3)
+        action = operation.rawValue
+        result = result.roundNumber(accuracy: 3)
         mainView.labelResult.text = "\(firstOperand) \(action) \(secondOperand) = \(result)"
         mainView.textFieldSecondNumber.text = ""
         mainView.textFieldFirstNumber.text = "\(result)"
     }
 }
 
-extension MainViewController{
-    /*
-     Округление числа
-     number - число
-     accuracy - число знаков после запятой
-     */
-    func roundNumber(number: Double, accuracy: Double) -> Double{
-        let num = pow(10, accuracy)
-        return round(number * num) / num
-    }
-}
-
-enum Operations{
-    case sub
-    case add
-    case div
-    case mul
+enum Operations: String{
+    case sub = "-"
+    case add = "+"
+    case div = "/"
+    case mul = "*"
 }
