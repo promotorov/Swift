@@ -49,7 +49,7 @@ class CustomDateField: UITextField {
         return formatter.date(from: date)
     }
     
-    func yearFromString() -> Int {
+    func yearFromValue() -> Int {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: dateFromString(date: text!)!)
         return year
