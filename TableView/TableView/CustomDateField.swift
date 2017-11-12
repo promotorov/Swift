@@ -15,17 +15,20 @@ class CustomDateField: UITextField {
         return formatter
     }()
     
+    private(set) var isCorrect = false;
+    
     func setControllers() {
         self.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingDidBegin)
-        self.addTarget(self, action: #selector(textFieldEndChange(_:)), for: .editingDidEnd)
+        self.addTarget(self, action: #selector(textFieldEndChange(_:)), for: .editingChanged)
     }
     
     @objc func textFieldEndChange(_ textField: UITextField) {
         guard let date = dateFromString(date: textField.text!) else {
-            textField.text = ""
+            isCorrect = false
             textField.backgroundColor = UIColor.red
             return
         }
+        isCorrect = true
         textField.backgroundColor = UIColor.white
     }
     
@@ -34,6 +37,7 @@ class CustomDateField: UITextField {
         dataPicker.datePickerMode = .date
         textField.inputView = dataPicker
         textField.text = stringFromDate(date: dataPicker.date)
+        isCorrect = true
         dataPicker.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
     }
     
@@ -43,6 +47,12 @@ class CustomDateField: UITextField {
     
     func dateFromString(date: String) -> Date? {
         return formatter.date(from: date)
+    }
+    
+    func yearFromString() -> Int {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: dateFromString(date: text!)!)
+        return year
     }
     
     @objc func datePickerChanged(sender: UIDatePicker) {

@@ -11,7 +11,7 @@ import UIKit
 struct Person {
     var firstName: String
     var secondName: String
-    var dateOfBirh: String
+    var age: Int
 }
 
 var source: [Person] = []
@@ -32,17 +32,33 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         mainView.textFieldDateOfBirth.delegate = self
         mainView.tableViewPersons.dataSource = self
         mainView.tableViewPersons.delegate = self
+        mainView.tableViewPersons.register(CustomTableViewCell.self, forCellReuseIdentifier: "cell")
         mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAddPerson), for: .touchUpInside)
         mainView.textFieldDateOfBirth.setControllers()
     }
     
     @objc func handleButtonAddPerson(){
+        let firstName = mainView.textFieldFirstName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let secondName = mainView.textFieldSecondName.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let date = mainView.textFieldDateOfBirth.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isCorrectDate = mainView.textFieldDateOfBirth.isCorrect
+    
+        if secondName.isEmpty || date.isEmpty || !isCorrectDate == true {
+            return
+        }
+    
+        let year = mainView.textFieldDateOfBirth.yearFromString()
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let currentYear = calendar.component(.year, from: currentDate)
+        
         mainView.tableViewPersons.beginUpdates()
-        source.append(Person(firstName: mainView.textFieldFirstName.text!, secondName: mainView.textFieldSecondName.text!,
-                             dateOfBirh: mainView.textFieldDateOfBirth.text!))
+        source.append(Person(firstName: firstName, secondName: secondName, age: currentYear - year))
         let indexPath = IndexPath(row: source.count - 1, section: 0)
         mainView.tableViewPersons.insertRows(at: [indexPath], with: .automatic)
-        mainView.textFieldFirstName.text = "\(source.count)"
+        mainView.textFieldFirstName.text = ""
+        mainView.textFieldSecondName.text = ""
+        mainView.textFieldDateOfBirth.text = ""
         mainView.tableViewPersons.endUpdates()
     }
 }
@@ -50,8 +66,12 @@ class MainViewController: UIViewController, UITextFieldDelegate {
 extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "cell")
-        cell.textLabel?.text = source[indexPath.row].firstName
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let userCell = cell as! CustomTableViewCell
+        let user: Person = source[indexPath.row]
+        userCell.firstNameLabel.text = user.firstName
+        userCell.secondNameLabel.text = user.secondName
+        userCell.ageLabel.text = "\(user.age)"
         return cell
     }
     
