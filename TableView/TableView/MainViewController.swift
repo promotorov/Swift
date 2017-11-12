@@ -29,25 +29,13 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         mainView.textFieldDateOfBirth.delegate = self
         mainView.tableViewPersons.dataSource = self
         mainView.tableViewPersons.delegate = self
-        
         mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAddPerson), for: .touchUpInside)
+        mainView.textFieldDateOfBirth.setControllers()
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let datePicker = UIDatePicker()
-        textField.inputView = datePicker
-        datePicker.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
-    }
-    
-    @objc func datePickerChanged(sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        mainView.textFieldDateOfBirth.text = formatter.string(from: sender.date)
-    }
     @objc func handleButtonAddPerson(){
         mainView.tableViewPersons.beginUpdates()
         source.append(Person(firstName: mainView.textFieldFirstName.text!, secondName: mainView.textFieldSecondName.text!,

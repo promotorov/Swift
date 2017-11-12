@@ -18,8 +18,8 @@ class MainView: UIView {
         return textField
     }()
     
-    var textFieldDateOfBirth: UITextField = {
-        var textField = UITextField()
+    var textFieldDateOfBirth: CustomDateField = {
+        var textField = CustomDateField()
         setTextFieldProperties(textField: textField)
         textField.textColor = UIColor.black
         textField.placeholder = "Date of Birthday"
