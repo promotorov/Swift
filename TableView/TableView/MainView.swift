@@ -46,11 +46,11 @@ class MainView: UIView {
     
     override var frame: CGRect {
         didSet {
-            textFieldFirstName.frame = CGRect(x: 20, y: 50, width: 250, height: 30)
-            textFieldSecondName.frame = CGRect(x: 20, y: 100, width: 250, height: 30)
-            textFieldDateOfBirth.frame = CGRect(x: 20, y: 150, width: 250, height: 30)
-            buttonAdd.frame = CGRect(x: 20, y: 200, width: 100, height: 50)
-            tableViewPersons.frame = CGRect(x: 20, y: 270, width: 300, height: 300)
+            textFieldFirstName.frame = CGRect(x: 20, y: 100, width: 250, height: 30)
+            textFieldSecondName.frame = CGRect(x: 20, y: 150, width: 250, height: 30)
+            textFieldDateOfBirth.frame = CGRect(x: 20, y: 200, width: 250, height: 30)
+            buttonAdd.frame = CGRect(x: 20, y: 250, width: 100, height: 50)
+            tableViewPersons.frame = CGRect(x: 20, y: 320, width: 300, height: 300)
         }
     }
     

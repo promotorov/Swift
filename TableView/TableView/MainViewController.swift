@@ -15,7 +15,9 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "UserTable"
         mainView.tableViewPersons.dataSource = self
+        mainView.tableViewPersons.delegate = self
         mainView.tableViewPersons.register(CustomTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         mainView.buttonAdd.addTarget(self, action: #selector(handleButtonAddPerson), for: .touchUpInside)
         mainView.textFieldDateOfBirth.setControllers()
@@ -28,6 +30,9 @@ class MainViewController: UIViewController {
         let date = mainView.textFieldDateOfBirth.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let isCorrectDate = mainView.textFieldDateOfBirth.isCorrect
         if secondName.isEmpty || date.isEmpty || !isCorrectDate == true {
+            let c = UIAlertController(title: "ERROR", message: "Form is incorrect", preferredStyle: .alert)
+            c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(c, animated: true, completion: nil)
             return
         }
     
@@ -41,6 +46,7 @@ class MainViewController: UIViewController {
         mainView.tableViewPersons.endUpdates()
         Person.serializePersons()
     }
+
 }
 
 extension MainViewController: UITableViewDataSource {
@@ -57,5 +63,41 @@ extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Person.persons.count
+    }
+}
+
+extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let c = UserInfoViewController()
+        let person = Person.persons[indexPath.row]
+        print(indexPath.row)
+        c.firstName = person.firstName
+        c.secondName = person.secondName
+        c.age = person.age
+        navigationController?.pushViewController(c, animated: true)
+    }
+}
+
+class UserInfoViewController: UIViewController {
+    var firstName: String = ""
+    var secondName: String = ""
+    var age: Int = 0
+    
+    var userInfoView: UserInfoView{
+        get{
+            return view as! UserInfoView
+        }
+    }
+    
+    override func loadView() {
+        view = UserInfoView()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "UserInfo"
+        userInfoView.labelFirstName.text = firstName
+        userInfoView.labelSecondName.text = secondName
+        userInfoView.labelAge.text = "\(age)"
     }
 }
