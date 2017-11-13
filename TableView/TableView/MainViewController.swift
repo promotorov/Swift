@@ -30,9 +30,9 @@ class MainViewController: UIViewController {
         let date = mainView.textFieldDateOfBirth.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let isCorrectDate = mainView.textFieldDateOfBirth.isCorrect
         if secondName.isEmpty || date.isEmpty || !isCorrectDate == true {
-            let c = UIAlertController(title: "ERROR", message: "Form is incorrect", preferredStyle: .alert)
-            c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(c, animated: true, completion: nil)
+            let alert = UIAlertController(title: "ERROR", message: "Form is incorrect", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             return
         }
     
@@ -67,37 +67,13 @@ extension MainViewController: UITableViewDataSource {
 }
 
 extension MainViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let c = UserInfoViewController()
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let userView = UserInfoViewController()
         let person = Person.persons[indexPath.row]
         print(indexPath.row)
-        c.firstName = person.firstName
-        c.secondName = person.secondName
-        c.age = person.age
-        navigationController?.pushViewController(c, animated: true)
-    }
-}
-
-class UserInfoViewController: UIViewController {
-    var firstName: String = ""
-    var secondName: String = ""
-    var age: Int = 0
-    
-    var userInfoView: UserInfoView{
-        get{
-            return view as! UserInfoView
-        }
-    }
-    
-    override func loadView() {
-        view = UserInfoView()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "UserInfo"
-        userInfoView.labelFirstName.text = firstName
-        userInfoView.labelSecondName.text = secondName
-        userInfoView.labelAge.text = "\(age)"
+        userView.firstName = person.firstName
+        userView.secondName = person.secondName
+        userView.age = person.age
+        navigationController?.pushViewController(userView, animated: true)
     }
 }

@@ -15,7 +15,7 @@ class Person: Codable {
     
     static var url: URL = {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let url = URL(fileURLWithPath: documentsPath + "/my.json2")
+        let url = URL(fileURLWithPath: documentsPath + "/my.json3")
         return url
     }()
     
@@ -34,7 +34,9 @@ class Person: Codable {
     }
     
     static func desirializePersons() {
-        let data = try! Data(contentsOf: url)
+        guard let data = try? Data(contentsOf: url) else {
+            return
+        }
         persons = try! JSONDecoder().decode([Person].self, from: data)
     }
 }
