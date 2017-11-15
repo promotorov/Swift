@@ -32,12 +32,17 @@ class CustomTableViewCell: UITableViewCell {
         label.textAlignment = .center
         return label
     }()
+    let userImageView:UIImageView = {
+        var imageView = UIImageView()
+        return imageView
+    }()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(firstNameLabel)
         contentView.addSubview(ageLabel)
         contentView.addSubview(secondNameLabel)
+        contentView.addSubview(userImageView)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,17 +55,19 @@ class CustomTableViewCell: UITableViewCell {
                 firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
                 secondNameLabel.frame = CGRect(x: 0, y: 70, width: frame.width, height: 30)
                 ageLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
+                userImageView.frame = CGRect(x: 0, y: 105, width: 30, height: 30)
             }
             else {
                 firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
                 secondNameLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
                 ageLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
+                userImageView.frame = CGRect(x: 0, y: 70, width: 30, height: 30)
             }
         }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let size = super.sizeThatFits(size)
-        return CGSize(width: size.width, height: isExpanded ? 65 : 100)
+        return CGSize(width: size.width, height: isExpanded ? 100 : 135)
     }
 }
