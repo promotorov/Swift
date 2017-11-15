@@ -14,7 +14,7 @@ extension URL {
     }
     
     static func createPathWithBaseDir(path: String) -> URL {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        let documentsPath = baseDir()
         let url = URL(fileURLWithPath: documentsPath + path)
         return url
     }

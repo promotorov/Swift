@@ -9,18 +9,12 @@
 import UIKit
 
 class CustomTableViewCell: UITableViewCell {
-    var isNoFirstNameLabel:Bool {
-        if firstNameLabel.text?.isEmpty == true {
-            return true
-        }
-        return false
+    var isNoFirstNameLabel:Bool? {
+        return firstNameLabel.text?.isEmpty
     }
     
-    var isNoUserImageView:Bool {
-        if userImageView.image == nil {
-            return true
-        }
-        return false
+    var isNoUserImageView:Bool? {
+        return userImageView.image == nil ? true : false
     }
     
     let firstNameLabel:UILabel = {

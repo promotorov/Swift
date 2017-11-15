@@ -1,6 +1,6 @@
 import UIKit
 
-class MainViewController: UIViewController, UIImagePickerControllerDelegate {
+class MainViewController: UIViewController {
 
     var reuseIdentifier = "person"
     
@@ -90,7 +90,7 @@ extension MainViewController: UITableViewDelegate {
     }
 }
 
-extension MainViewController: UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
+extension MainViewController:  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {

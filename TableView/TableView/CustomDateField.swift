@@ -9,13 +9,34 @@ import UIKit
 import Foundation
 
 class CustomDateField: UITextField {
+    private(set) var wrongStyle: UIColor = UIColor.red
+    private(set) var correctStyle: UIColor = UIColor.white
+    
+    private(set) var isCorrect = true {
+        didSet {
+            backgroundColor = isCorrect ? correctStyle : wrongStyle
+        }
+    }
+    
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
         return formatter
     }()
+    init(wrongStyle: UIColor, correctStyle: UIColor) {
+        super.init(frame: CGRect())
+        self.wrongStyle = wrongStyle
+        self.correctStyle = correctStyle
+    }
     
-    private(set) var isCorrect = false;
+    required override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init has not been implemented")
+    }
+    
     
     func setControllers() {
         self.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingDidBegin)
@@ -24,10 +45,10 @@ class CustomDateField: UITextField {
     
     @objc func textFieldEndChange(_ textField: UITextField) {
         guard let date = dateFromString(date: textField.text!) else {
-            doWrongStyle(color: UIColor.red)
+            isCorrect = false
             return
         }
-        doCorerctStyle(color: UIColor.white)
+        isCorrect = true
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -35,7 +56,7 @@ class CustomDateField: UITextField {
         dataPicker.datePickerMode = .date
         textField.inputView = dataPicker
         textField.text = stringFromDate(date: dataPicker.date)
-        doCorerctStyle(color: UIColor.white)
+        isCorrect = true
         dataPicker.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
     }
     
@@ -51,16 +72,6 @@ class CustomDateField: UITextField {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: dateFromString(date: text!)!)
         return year
-    }
-    
-    private func doWrongStyle(color: UIColor){
-        isCorrect = false
-        self.backgroundColor = color
-    }
-    
-    private func doCorerctStyle(color: UIColor){
-        isCorrect = true
-        self.backgroundColor = UIColor.white
     }
     
     @objc func datePickerChanged(sender: UIDatePicker) {
