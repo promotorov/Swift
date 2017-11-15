@@ -84,11 +84,8 @@ extension MainViewController: UITableViewDelegate {
         userView.firstName = person.firstName
         userView.secondName = person.secondName
         userView.age = person.age
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let personUrl = "\(person.imgUrl)"
-        let url = URL(fileURLWithPath: documentsPath + personUrl)
+        let url = URL.createPathWithBaseDir(path: person.imgUrl)
         userView.imgUrl = url.path
-        print("url \(url.path)")
         navigationController?.pushViewController(userView, animated: true)
     }
 }
@@ -98,9 +95,8 @@ extension MainViewController: UINavigationControllerDelegate, UIPopoverPresentat
     {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             if let data = UIImagePNGRepresentation(image) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
                 let personUrl = "/PersonsImageNew\(Person.persons.count - 1).png"
-                let url = URL(fileURLWithPath: documentsPath + personUrl)
+                let url = URL.createPathWithBaseDir(path: personUrl)
                 try? data.write(to: url)
                 updatePersonImage(url: personUrl, person: Person.persons[Person.persons.count-1])
                 mainView.tableViewPersons.beginUpdates()

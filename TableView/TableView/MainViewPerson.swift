@@ -15,12 +15,8 @@ func readPerson(cell: UITableViewCell, path: IndexPath) {
     userCell.firstNameLabel.text = user.firstName
     userCell.secondNameLabel.text = user.secondName
     userCell.ageLabel.text = "\(user.age)"
-    let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-    print(user.imgUrl)
-    let url = URL(fileURLWithPath: documentsPath + user.imgUrl)
-    print(url)
+    let url = URL.createPathWithBaseDir(path: user.imgUrl)
     userCell.userImageView.image = UIImage(contentsOfFile: url.path)
-    if(userCell.userImageView.image == nil) {print("nil")}
 }
 
 func updatePersonImage(url: String, person: Person) {

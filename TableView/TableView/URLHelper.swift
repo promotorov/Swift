@@ -8,10 +8,12 @@
 
 import Foundation
 extension URL {
-    func baseDir() -> String {
+    
+    static func baseDir() -> String {
         return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     }
-    func createPathWithBaseDir(path: String) -> URL {
+    
+    static func createPathWithBaseDir(path: String) -> URL {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let url = URL(fileURLWithPath: documentsPath + path)
         return url
