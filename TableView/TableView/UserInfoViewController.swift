@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 
 class UserInfoViewController: UIViewController {
-    var firstName: String = ""
-    var secondName: String = ""
-    var age: Int = 0
-    var imgUrl: String = ""
+    var firstName = ""
+    var secondName = ""
+    var age = 0
+    var imgUrl = ""
     
     var userInfoView: UserInfoView{
         get{
@@ -22,7 +22,6 @@ class UserInfoViewController: UIViewController {
         title = "UserInfo"
         userInfoView.labelFirstName.text = firstName
         userInfoView.labelSecondName.text = secondName
-        print(age)
         userInfoView.labelAge.text = "\(age)"
         userInfoView.imageViewUser.image = UIImage(contentsOfFile: imgUrl)
     }

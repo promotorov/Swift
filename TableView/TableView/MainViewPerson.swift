@@ -10,22 +10,19 @@ func createNewPerson(firstName:String, secondName:String, dateOfBirth: CustomDat
 }
 
 func readPerson(cell: UITableViewCell, path: IndexPath) {
-    print("call")
     let userCell = cell as! CustomTableViewCell
     let user: Person = Person.persons[path.row]
     userCell.firstNameLabel.text = user.firstName
     userCell.secondNameLabel.text = user.secondName
     userCell.ageLabel.text = "\(user.age)"
-    
     let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-    let personUrl = "/\(path.row).png"
-    let url = URL(fileURLWithPath: documentsPath + personUrl)
+    print(user.imgUrl)
+    let url = URL(fileURLWithPath: documentsPath + user.imgUrl)
     print(url)
-
     userCell.userImageView.image = UIImage(contentsOfFile: url.path)
-    print("call2")
+    if(userCell.userImageView.image == nil) {print("nil")}
 }
 
-func loadImageFortable(){
-    
+func updatePersonImage(url: String, person: Person) {
+    person.imgUrl = url
 }

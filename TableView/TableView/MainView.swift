@@ -32,14 +32,7 @@ class MainView: UIView {
         button.backgroundColor = UIColor.brown
         return button
     }()
-    
-    var image: UIImageView = {
-        var image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        image.backgroundColor = UIColor.red;
-        return image
-    }()
-    
+
     var tableViewPersons = UITableView()
     
     override init(frame: CGRect) {
@@ -49,7 +42,6 @@ class MainView: UIView {
         addSubview(textFieldDateOfBirth)
         addSubview(buttonAdd)
         addSubview(tableViewPersons)
-        addSubview(image)
     }
     
     override var frame: CGRect {
@@ -59,7 +51,6 @@ class MainView: UIView {
             textFieldDateOfBirth.frame = CGRect(x: 20, y: 200, width: 150, height: 30)
             buttonAdd.frame = CGRect(x: 20, y: 250, width: 100, height: 50)
             tableViewPersons.frame = CGRect(x: 20, y: 320, width: 300, height: 300)
-            image.frame = CGRect(x:200, y: 100, width: 50, height: 50)
         }
     }
     

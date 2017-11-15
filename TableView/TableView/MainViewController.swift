@@ -1,7 +1,7 @@
 import UIKit
 
-class MainViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate  {
-    
+class MainViewController: UIViewController, UIImagePickerControllerDelegate {
+
     var reuseIdentifier = "person"
     
     var mainView: MainView{
@@ -9,6 +9,7 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             return view as! MainView
         }
     }
+    
     override func loadView() {
         view = MainView()
     }
@@ -54,33 +55,8 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         mainView.textFieldFirstName.text = ""
         mainView.textFieldSecondName.text = ""
         mainView.textFieldDateOfBirth.text = ""
-        print("k")
         mainView.tableViewPersons.endUpdates()
         Person.serializePersons()
-        print("d")
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
-    {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            mainView.image.image = image
-            if let data = UIImagePNGRepresentation(image) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-                let personUrl = "/\(Person.persons.count-1).png"
-                let url = URL(fileURLWithPath: documentsPath + personUrl)
-                print(url)
-                try? data.write(to: url)
-                print("Saved")
-                mainView.tableViewPersons.beginUpdates()
-                let indexPath = IndexPath(row: Person.persons.count - 1, section: 0)
-                mainView.tableViewPersons.reloadRows(at: [indexPath], with: .automatic)
-                mainView.tableViewPersons.endUpdates()
-            }
-        } else {
-            print("Error")
-        }
-        
-        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -89,7 +65,6 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         readPerson(cell: cell, path: indexPath)
-        print("read")
         return cell
     }
     
@@ -106,14 +81,37 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let userView = UserInfoViewController()
         let person = Person.persons[indexPath.row]
-        print(indexPath.row)
         userView.firstName = person.firstName
         userView.secondName = person.secondName
         userView.age = person.age
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let personUrl = "/\(indexPath.row).png"
+        let personUrl = "\(person.imgUrl)"
         let url = URL(fileURLWithPath: documentsPath + personUrl)
         userView.imgUrl = url.path
+        print("url \(url.path)")
         navigationController?.pushViewController(userView, animated: true)
+    }
+}
+
+extension MainViewController: UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let data = UIImagePNGRepresentation(image) {
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+                let personUrl = "/PersonsImageNew\(Person.persons.count - 1).png"
+                let url = URL(fileURLWithPath: documentsPath + personUrl)
+                try? data.write(to: url)
+                updatePersonImage(url: personUrl, person: Person.persons[Person.persons.count-1])
+                mainView.tableViewPersons.beginUpdates()
+                let indexPath = IndexPath(row: Person.persons.count - 1, section: 0)
+                mainView.tableViewPersons.reloadRows(at: [indexPath], with: .automatic)
+                mainView.tableViewPersons.endUpdates()
+                Person.serializePersons()
+            }
+        } else {
+            print("Error")
+        }
+        self.dismiss(animated: true, completion: nil)
     }
 }

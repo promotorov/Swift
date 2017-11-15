@@ -12,11 +12,12 @@ class Person: Codable {
     private(set) var firstName: String
     private(set) var secondName: String
     private(set) var age: Int
+    var imgUrl = ""
     
     
     static var url: URL = {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let url = URL(fileURLWithPath: documentsPath + "/result4.json")
+        let url = URL(fileURLWithPath: documentsPath + "/resultNew6.json")
         return url
     }()
     

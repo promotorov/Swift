@@ -9,9 +9,15 @@
 import UIKit
 
 class CustomTableViewCell: UITableViewCell {
-    var isExpanded:Bool {
-        if(firstNameLabel.text?.isEmpty == true) {
-            print("empty")
+    var isNoFirstNameLabel:Bool {
+        if firstNameLabel.text?.isEmpty == true {
+            return true
+        }
+        return false
+    }
+    
+    var isNoUserImageView:Bool {
+        if userImageView.image == nil {
             return true
         }
         return false
@@ -51,23 +57,46 @@ class CustomTableViewCell: UITableViewCell {
     
     override var frame: CGRect {
         didSet {
-            if(isExpanded == false) {
+            if isNoFirstNameLabel == false && isNoUserImageView == false {
                 firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
                 secondNameLabel.frame = CGRect(x: 0, y: 70, width: frame.width, height: 30)
                 ageLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
                 userImageView.frame = CGRect(x: 0, y: 105, width: 30, height: 30)
             }
-            else {
+            else if isNoFirstNameLabel == true && isNoUserImageView == false {
                 firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
                 secondNameLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
                 ageLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
                 userImageView.frame = CGRect(x: 0, y: 70, width: 30, height: 30)
+            }
+            else if isNoFirstNameLabel == false && isNoUserImageView == true {
+                firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
+                secondNameLabel.frame = CGRect(x: 0, y: 70, width: frame.width, height: 30)
+                ageLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
+                userImageView.frame = CGRect(x: 0, y: 70, width: 30, height: 0)
+            }
+            else {
+                firstNameLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 0)
+                secondNameLabel.frame = CGRect(x: 0, y: 35, width: frame.width, height: 30)
+                ageLabel.frame = CGRect(x: 0, y: 0, width: frame.width, height: 30)
+                userImageView.frame = CGRect(x: 0, y: 0, width: 30, height: 0)
             }
         }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let size = super.sizeThatFits(size)
-        return CGSize(width: size.width, height: isExpanded ? 100 : 135)
+        if isNoFirstNameLabel == false && isNoUserImageView == false {
+            return CGSize(width: size.width, height: 135)
+        }
+        else if isNoFirstNameLabel == false && isNoUserImageView == true {
+            return CGSize(width: size.width, height: 100)
+        }
+        else if isNoFirstNameLabel == true && isNoUserImageView == false {
+            return CGSize(width: size.width, height: 100)
+        }
+        else {
+            return CGSize(width: size.width, height: 65)
+        }
     }
 }
